@@ -10,67 +10,67 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var viewModel = ViewModel()
     
-    func clearButton(size:CGFloat) -> some View {
+    func clearButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapAllClear()
         }, label: {
-            GrayCircleButtonView(text: "AC",size: size)
+            GrayCircleButtonView(text: "AC",hSize: hSize, vSize: vSize)
         })
     }
     
-    func leftBracketButton(size:CGFloat) -> some View {
+    func leftBracketButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: "(")
         }, label: {
-            GrayCircleButtonView(text: "(",size: size)
+            GrayCircleButtonView(text: "(",hSize: hSize, vSize: vSize)
         })
     }
     
-    func rightBracketButton(size:CGFloat) -> some View {
+    func rightBracketButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: ")")
         }, label: {
-            GrayCircleButtonView(text: ")",size: size)
+            GrayCircleButtonView(text: ")",hSize: hSize, vSize: vSize)
         })
     }
     
-    func divideButton(size:CGFloat) -> some View {
+    func divideButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: "/")
         }, label: {
-            OrangeCircleButtonView(text: "/",size: size)
+            OrangeCircleButtonView(text: "/",hSize: hSize, vSize: vSize)
         })
     }
     
-    func multiplyButton(size:CGFloat) -> some View {
+    func multiplyButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: "*")
         }, label: {
-            OrangeCircleButtonView(text: "*",size: size)
+            OrangeCircleButtonView(text: "*",hSize: hSize, vSize: vSize)
         })
     }
     
-    func minusButton(size:CGFloat) -> some View {
+    func minusButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: "-")
         }, label: {
-            OrangeCircleButtonView(text: "-",size: size)
+            OrangeCircleButtonView(text: "-",hSize: hSize, vSize: vSize)
         })
     }
     
-    func plusButton(size:CGFloat) -> some View {
+    func plusButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapExpression(sign: "+")
         }, label: {
-            OrangeCircleButtonView(text: "+",size: size)
+            OrangeCircleButtonView(text: "+",hSize: hSize, vSize: vSize)
         })
     }
     
-    func computeButton(size:CGFloat) -> some View {
+    func computeButton(hSize:CGFloat, vSize:CGFloat) -> some View {
         return Button(action: {
             viewModel.tapEqual()
         }, label: {
-            OrangeCircleButtonView(text: "=",size: size)
+            OrangeCircleButtonView(text: "=",hSize: hSize, vSize: vSize)
         })
     }
     
@@ -81,31 +81,36 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Color(.black)
-            GeometryReader() { proxy in
-                let size = proxy.size.height/9
-                ZStack(alignment: .bottomTrailing) {
+            GeometryReader { proxy in
+                let vSize = proxy.size.height/9
+                let hSize = proxy.size.width/4.5
+                ZStack {
                     Color(.black)
-                    VStack(alignment: .leading){
-                        Text(viewModel.currentNumberString)
-                            .foregroundColor(.white)
-                            .font(.system(size:size/1.5))
-                        Spacer()
-                        if let result = viewModel.result {
+                    VStack {
+                        VStack {
                             HStack {
-                                Spacer()
-                                Text(result)
+                                Text(viewModel.currentNumberString)
                                     .foregroundColor(.white)
-                                    .font(.system(size:size/1.5))
+                                    .font(.system(size:vSize/1.3))
+                                Spacer()
                             }
-                        }
-                        HStack {
                             Spacer()
+                            if let result = viewModel.result {
+                                HStack {
+                                    Spacer()
+                                    Text(result)
+                                        .foregroundColor(.white)
+                                        .font(.system(size:vSize/1.3))
+                                }
+                            }
+                        }.padding(.horizontal)
+                        HStack {
                             VStack {
                                 HStack {
                                     Group {
-                                        clearButton(size:size)
-                                        leftBracketButton(size:size)
-                                        rightBracketButton(size:size)
+                                        clearButton(hSize:hSize,vSize:vSize)
+                                        leftBracketButton(hSize:hSize,vSize:vSize)
+                                        rightBracketButton(hSize:hSize,vSize:vSize)
                                     }
                                     .padding(Self.buttonPadding)
                                 }
@@ -116,7 +121,7 @@ struct ContentView: View {
                                             Button(action: {
                                                 viewModel.tapExpression(sign: "\(number)")
                                             }, label: {
-                                                BlackCircleButtonView(text: "\(number)",size:size)
+                                                BlackCircleButtonView(text: "\(number)",hSize:hSize,vSize:vSize)
                                             })
                                             .padding(Self.buttonPadding)
                                         }
@@ -128,24 +133,24 @@ struct ContentView: View {
                                             viewModel.tapExpression(sign: "0")
                                         }, label: {
                                             ZStack {
-                                                RoundedRectangle(cornerRadius:size/2)
-                                                    .frame(width:size*2+10+2*Self.buttonPadding,height:size,alignment:.center)
+                                                RoundedRectangle(cornerRadius:vSize/2)
+                                                    .frame(width:hSize*2+10+2*Self.buttonPadding,height:vSize,alignment:.center)
                                                     .foregroundColor(Color(grayScale:BlackCircleButtonView.grayScale))
                                                 Text("0")
                                                     .foregroundColor(.white)
-                                                    .font(.system(size: size/2.5))
+                                                    .font(.system(size: vSize/1.8))
                                             }
                                         })
                                         Button(action: {
                                             viewModel.tapExpression(sign: ".")
                                         }, label: {
                                             ZStack {
-                                                Circle()
-                                                    .frame(width:size,height:size,alignment:.center)
+                                                RoundedRectangle(cornerRadius: vSize/2)
+                                                    .frame(width: hSize, height: vSize, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                                                     .foregroundColor(Color(grayScale:BlackCircleButtonView.grayScale))
                                                 Text(".")
                                                     .foregroundColor(.white)
-                                                    .font(.system(size: size/2.5))
+                                                    .font(.system(size: vSize/1.8))
                                             }
                                         })
                                     }
@@ -154,11 +159,11 @@ struct ContentView: View {
                             }
                             VStack {
                                 Group {
-                                    divideButton(size:size)
-                                    multiplyButton(size:size)
-                                    minusButton(size:size)
-                                    plusButton(size:size)
-                                    computeButton(size:size)
+                                    divideButton(hSize:hSize,vSize:vSize)
+                                    multiplyButton(hSize:hSize,vSize:vSize)
+                                    minusButton(hSize:hSize,vSize:vSize)
+                                    plusButton(hSize:hSize,vSize:vSize)
+                                    computeButton(hSize:hSize,vSize:vSize)
                                 }
                                 .padding(Self.buttonPadding)
                             }
@@ -168,64 +173,71 @@ struct ContentView: View {
             }
             .padding()
         }
-
+        
     }
     
     static let buttonPadding:CGFloat = 2
     
     struct GrayCircleButtonView: View {
         let text: String
-        let size: CGFloat
+        let hSize: CGFloat
+        let vSize: CGFloat
         static let grayScale = 0.7
         var body: some View {
-            CircleButtonView(text: text,
+            RoundedRectButtonView(text: text,
                              color: Color(grayScale: Self.grayScale),
                              opacity: 1,
                              fontColor: .black,
-                             size:size)
+                             hSize:hSize,
+                             vSize:vSize)
         }
     }
     
     struct BlackCircleButtonView: View {
         let text: String
-        let size: CGFloat
+        let hSize: CGFloat
+        let vSize: CGFloat
         static let grayScale = 0.2
         var body: some View {
-            CircleButtonView(text: text,
+            RoundedRectButtonView(text: text,
                              color: Color(grayScale: Self.grayScale),
                              opacity: 1,
                              fontColor: .white,
-                             size: size)
+                             hSize:hSize,
+                             vSize:vSize)
         }
     }
     
     struct OrangeCircleButtonView: View {
         let text: String
-        let size: CGFloat
+        let hSize: CGFloat
+        let vSize: CGFloat
         var body: some View {
-            CircleButtonView(text: text,
+            RoundedRectButtonView(text: text,
                              color: Color(.orange),
                              opacity: 1,
                              fontColor: .white,
-                             size: size)
+                             hSize:hSize,
+                             vSize:vSize)
         }
     }
     
-    struct CircleButtonView: View {
+    struct RoundedRectButtonView: View {
         let text: String
         let color: Color
         let opacity: Double
         let fontColor: Color
-        let size: CGFloat
+        let hSize: CGFloat
+        let vSize: CGFloat
         var body: some View {
             ZStack {
-                Circle()
-                    .frame(width: size, height: size, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                RoundedRectangle(cornerRadius: vSize/1.8)
+                    .frame(width: hSize, height: vSize, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     .foregroundColor(color)
                     .opacity(opacity)
                 Text(text)
                     .foregroundColor(fontColor)
-                    .font(.system(size: size/2.5))
+                    .font(.system(size: vSize/2))
             }
         }
     }

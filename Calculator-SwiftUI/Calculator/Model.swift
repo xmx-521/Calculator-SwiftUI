@@ -21,7 +21,14 @@ struct Model {
     
     mutating func calculate() {
         if let num = currentNumberString.calculate() {
-            result = "\(num)"
+            let roundedNum = round(num)
+            var printNum = 0
+            if roundedNum == num {
+                printNum = Int(num)
+                result = "\(printNum)"
+            } else {
+                result = "\(num)"
+            }
         } else {
             result = "ERROR"
         }
